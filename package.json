@@ -1,0 +1,13 @@
+{
+  "name": "openclaw-ru-layer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Russian UI overlay reverse proxy for OpenClaw web chat",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
