@@ -1,0 +1,14 @@
+services:
+  openclaw-ru-layer:
+    build: .
+    image: openclaw-ru-layer:latest
+    container_name: openclaw-ru-layer
+    restart: unless-stopped
+    ports:
+      - "18790:18790"
+    environment:
+      PORT: "18790"
+      TARGET_ORIGIN: "http://192.168.50.239:18789"
+    volumes:
+      - ./server.mjs:/app/server.mjs:ro
+      - ./public:/app/public:ro

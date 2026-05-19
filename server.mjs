@@ -8,7 +8,8 @@ const PORT = Number(process.env.PORT || 8787);
 const TARGET_ORIGIN = process.env.TARGET_ORIGIN || "https://85.239.51.66";
 const TARGET = new URL(TARGET_ORIGIN);
 
-const overlayScript = await readFile(new URL("./public/ru-overlay.js", import.meta.url), "utf8");
+const overlayPath = new URL("./public/ru-overlay.js", import.meta.url);
+const loadOverlay = () => readFile(overlayPath, "utf8");
 
 const injectOverlay = (html) => {
   const marker = "</head>";
@@ -33,8 +34,19 @@ const server = createServer((req, res) => {
   }
 
   if (req.url === "/__ru-overlay.js") {
-    res.writeHead(200, { "content-type": "application/javascript; charset=utf-8" });
-    res.end(overlayScript);
+    loadOverlay().then(
+      (script) => {
+        res.writeHead(200, {
+          "content-type": "application/javascript; charset=utf-8",
+          "cache-control": "no-store"
+        });
+        res.end(script);
+      },
+      (err) => {
+        res.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
+        res.end(`overlay read failed: ${err.message}`);
+      }
+    );
     return;
   }
 
